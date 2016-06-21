@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateUsersTable extends Migration
+class CreateProductsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,19 +13,18 @@ class CreateUsersTable extends Migration
     public function up()
     {
         DB::transaction(function(){
-            Schema::create('users', function (Blueprint $table) {
+            Schema::create('products', function (Blueprint $table) {
                 $table->increments('id');
-                $table->text('email')->unique();
-                $table->text('password')->nullable();
-                $table->text('name');
-                $table->text('address');
-                $table->text('city');
-                $table->text('zipcode');
-
-                $table->rememberToken();
+                $table->text('title');
+                $table->text('description');
+                $table->text('image');
+                $table->decimal('price', 7, 2);
+                $table->text('vat_percentage', 3, 2);
 
                 $table->timestamp('created_at')->default(DB::raw('NOW()'));
                 $table->timestamp('updated_at')->default(DB::raw('NOW()'));
+
+                $table->softDeletes();
             });
         });
     }
@@ -38,7 +37,7 @@ class CreateUsersTable extends Migration
     public function down()
     {
         DB::transaction(function(){
-            Schema::drop('users');
+            Schema::drop('products');
         });
     }
 }

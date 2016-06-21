@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateUsersTable extends Migration
+class CreateOrderProductTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,19 +13,18 @@ class CreateUsersTable extends Migration
     public function up()
     {
         DB::transaction(function(){
-            Schema::create('users', function (Blueprint $table) {
-                $table->increments('id');
-                $table->text('email')->unique();
-                $table->text('password')->nullable();
-                $table->text('name');
-                $table->text('address');
-                $table->text('city');
-                $table->text('zipcode');
+            Schema::create('order_product', function (Blueprint $table) {
+                $table->text('order_id')->references('id')->on('orders')->onDelete('CASCADE');
+                $table->text('product_id')->references('id')->on('products')->onDelete('RESTRICT');
+                $table->integer('amount');
+                $table->decimal('price_each', 7, 2);
 
                 $table->rememberToken();
 
                 $table->timestamp('created_at')->default(DB::raw('NOW()'));
                 $table->timestamp('updated_at')->default(DB::raw('NOW()'));
+
+                $table->primary(['order_id', 'product_id']);
             });
         });
     }
@@ -38,7 +37,7 @@ class CreateUsersTable extends Migration
     public function down()
     {
         DB::transaction(function(){
-            Schema::drop('users');
+            Schema::drop('order_product');
         });
     }
 }

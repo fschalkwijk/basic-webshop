@@ -13,4 +13,8 @@ class Product extends Model
                     ->withPivot('amount', 'price_each')
                     ->withTimestamps();
     }
+
+    public function getVatAttribute(){
+        return $this->price * $this->vat_percentage;
+    }
 }

@@ -18,8 +18,7 @@ class CreateOrderProductTable extends Migration
                 $table->text('product_id')->references('id')->on('products')->onDelete('RESTRICT');
                 $table->integer('amount');
                 $table->decimal('price_each', 7, 2);
-
-                $table->rememberToken();
+                $table->decimal('vat_percentage', 3, 2);
 
                 $table->timestamp('created_at')->default(DB::raw('NOW()'));
                 $table->timestamp('updated_at')->default(DB::raw('NOW()'));

@@ -16,3 +16,6 @@ Route::auth();
 Route::get('/', 'HomeController@index');
 
 Route::get('/product/{product}', 'ProductController@show');
+
+Route::get('/cart/add/{product}/{amount?}', 'CartController@addProduct');
+Route::get('/cart/remove/{product}/{amount?}', 'CartController@removeProduct');

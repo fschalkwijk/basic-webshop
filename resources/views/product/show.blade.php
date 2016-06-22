@@ -3,7 +3,7 @@
 @section('content')
 <div class="container">
     <div class="row">
-        <div class="col-sm-10">
+        <div class="col-sm-10 col-sm-offset-1">
             <div class="panel panel-primary">
                 <div class="panel-heading">
                     Product #{{ $item->id }} - {{ $item->title }}
@@ -43,17 +43,17 @@
                         <div class="col-md-3 col-md-offset-7 col-sm-4 col-sm-offset-6 col-xs-6 col-xs-offset-3">
                             <div class="input-group">
                                 <span class="input-group-btn">
-                                    <button class="btn btn-default substract-input" type="button">
+                                    <a class="btn btn-default" href="{{ action('CartController@removeProduct', ['product' => $item->id, 'amount' => 1]) }}">
                                         <span class="glyphicon glyphicon-minus"></span>
-                                    </button>
+                                    </a>
                                 </span>
 
-                                <input type="number" min="0" step="1" value="0" name="amount" class="form-control">
+                                <input type="number" min="0" step="1" value="{{ Cart::getProductAmount($item) }}" name="amount" class="form-control">
 
                                 <span class="input-group-btn">
-                                    <button class="btn btn-default add-input" type="button">
+                                    <a class="btn btn-default" href="{{ action('CartController@addProduct', ['product' => $item->id]) }}">
                                         <span class="glyphicon glyphicon-plus"></span>
-                                    </button>
+                                    </a>
                                 </span>
                             </div>
                         </div>

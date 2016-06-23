@@ -9,7 +9,7 @@
                     Your shoppingcart
                 </div>
 
-                <table class="table table-striped">
+                <table class="table table-striped cart-table">
                     <thead>
                         <tr>
                             <th>Articlenumber</th>
@@ -24,23 +24,23 @@
                         <tr>
                             <th colspan="2"></th>
                             <th>Subtotal:</th>
-                            <th>{{ Cart::getTotalProductCount() }}</th>
-                            <th>&euro; {{ number_format(Cart::getTotalPrice(), 2, ',', '.') }}</th>
+                            <th class="total-product-amount">{{ Cart::getTotalProductAmount() }}</th>
+                            <th class="total-price">&euro; {{ number_format(Cart::getTotalPrice(), 2, ',', '.') }}</th>
                         </tr>
                         <tr>
                             <th colspan="3"></th>
                             <th>Vat:</th>
-                            <th>&euro; {{ number_format(Cart::getTotalVat(), 2, ',', '.') }}</th>
+                            <th class="total-vat">&euro; {{ number_format(Cart::getTotalVat(), 2, ',', '.') }}</th>
                         </tr>
                         <tr>
                             <th colspan="3"></th>
                             <th>Total:</th>
-                            <th>&euro; {{ number_format(Cart::getTotalPrice(), 2, ',', '.') }}</th>
+                            <th class="total-price">&euro; {{ number_format(Cart::getTotalPrice(), 2, ',', '.') }}</th>
                         </tr>
                     </tfoot>
 
                     <tbody>
-                        @foreach(Cart::getItems() as $product_id => $cart_item)
+                        @foreach(Cart::getItems()->sortBy(function($item, $key){ return $key; }) as $product_id => $cart_item)
                         <tr>
                             <td>{{ $product_id }}</td>
                             <td>{{ $cart_item->product->title }}</td>
@@ -48,15 +48,28 @@
                             <td>
                                 <div class="input-group" style="max-width: 150px">
                                     <span class="input-group-btn">
-                                        <a class="btn btn-default" href="{{ action('CartController@removeProduct', ['product' => $product_id, 'amount' => 1]) }}">
+                                        <a
+                                            class="btn btn-default remove-product"
+                                            href="{{ action('CartController@removeProduct', ['product' => $product_id, 'amount' => 1]) }}" data-product-id="{{ $product_id }}">
                                             <span class="glyphicon glyphicon-minus"></span>
                                         </a>
                                     </span>
 
-                                    <input type="number" min="0" step="1" value="{{ $cart_item->amount }}" name="amount" class="form-control">
+                                    <input
+                                        type="number"
+                                        min="0"
+                                        step="1"
+                                        value="{{ $cart_item->amount }}"
+                                        name="amount"
+                                        class="form-control product-amount"
+                                        id="product-amount-{{ $product_id }}"
+                                        data-product-id="{{ $product_id }}">
 
                                     <span class="input-group-btn">
-                                        <a class="btn btn-default" href="{{ action('CartController@addProduct', ['product' => $product_id]) }}">
+                                        <a
+                                            class="btn btn-default add-product"
+                                            href="{{ action('CartController@addProduct', ['product' => $product_id]) }}"
+                                            data-product-id="{{ $product_id }}">
                                             <span class="glyphicon glyphicon-plus"></span>
                                         </a>
                                     </span>
@@ -76,17 +89,21 @@
 
                 <div class="panel-body">
                     <form action="{{ action('CartController@checkout') }}" method="POST" role="form">
+                        {{ csrf_field() }}
+
                         <div class="col-sm-6">
                             @include('layouts.input', [
                                 'name' => 'name',
                                 'title' => 'Name',
                                 'item' => $user])
 
+                            @if(!Auth::check())
                             @include('layouts.input', [
                                 'name' => 'email',
                                 'title' => 'Emailaddress',
                                 'item' => $user,
                                 'type' => 'email'])
+                            @endif
 
                             @include('layouts.input', [
                                 'name' => 'address',
@@ -98,7 +115,12 @@
                                     @include('layouts.input', [
                                         'name' => 'zipcode',
                                         'title' => 'Zipcode',
-                                        'item' => $user])
+                                        'item' => $user,
+                                        'attrs'     => [
+                                            'title'     => trans('validation.custom.zipcode.regex'),
+                                            'maxlength' => 6,
+                                            'pattern'   => config('regex.raw.zipcode.regex')
+                                        ]])
                                 </div>
 
                                 <div class="col-sm-8">
@@ -112,16 +134,18 @@
 
                         <div class="col-sm-6">
                             @if(!Auth::check())
-                                @include('layouts.input', [
-                                    'name' => 'password',
-                                    'title' => 'Password',
-                                    'type' => 'password'])
+                            @include('layouts.input', [
+                                'name' => 'password',
+                                'title' => 'Password',
+                                'type' => 'password',
+                                'required' => false])
 
 
-                                @include('layouts.input', [
-                                    'name' => 'password_confirmation',
-                                    'title' => 'Password confirmation',
-                                    'type' => 'password'])
+                            @include('layouts.input', [
+                                'name' => 'password_confirmation',
+                                'title' => 'Password confirmation',
+                                'type' => 'password',
+                                'required' => false])
                             @endif
 
                             @include('layouts.select', [
@@ -134,6 +158,10 @@
                                     ['id' => 1005, 'name' => 'ING Bank'],
                                     ['id' => 1009, 'name' => 'Rabobank'],
                                 ]])
+                        </div>
+
+                        <div class="col-sm-12 clearfix">
+                            <button type="submit" class="btn btn-primary pull-right">Order</button>
                         </div>
                     </form>
                 </div>

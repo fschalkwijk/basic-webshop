@@ -74,7 +74,7 @@
                 <form class="navbar-form navbar-right" role="search">
                     <a class="btn btn-default" href="{{ action('CartController@show') }}">
                         <span class="glyphicon glyphicon-shopping-cart"></span>
-                        <span class="label label-primary">{{ Cart::getTotalProductCount() }}</span>
+                        <span class="label label-primary total-product-amount">{{ Cart::getTotalProductAmount() }}</span>
                     </a>
                 </form>
             </div>
@@ -89,5 +89,10 @@
     <script src="{{ url('js/app.js') }}"></script>
 
     @yield('scripts')
+
+    <script>
+        var product_add_url = '{{ action('CartController@addProduct', ['product_id', 'amount' => 'amount']) }}';
+        var product_remove_url = '{{ action('CartController@removeProduct', ['product_id' => 'product_id', 'amount' => 'amount']) }}';
+    </script>
 </body>
 </html>

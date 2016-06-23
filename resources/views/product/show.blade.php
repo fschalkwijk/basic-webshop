@@ -43,15 +43,28 @@
                         <div class="col-md-3 col-md-offset-9 col-sm-4 col-sm-offset-8 col-xs-6 col-xs-offset-6">
                             <div class="input-group">
                                 <span class="input-group-btn">
-                                    <a class="btn btn-default" href="{{ action('CartController@removeProduct', ['product' => $item->id, 'amount' => 1]) }}">
+                                    <a
+                                        class="btn btn-default remove-product"
+                                        href="{{ action('CartController@removeProduct', ['product' => $item->id, 'amount' => 1]) }}" data-product-id="{{ $item->id }}">
                                         <span class="glyphicon glyphicon-minus"></span>
                                     </a>
                                 </span>
 
-                                <input type="number" min="0" step="1" value="{{ Cart::getProductAmount($item) }}" name="amount" class="form-control">
+                                <input
+                                    type="number"
+                                    min="0"
+                                    step="1"
+                                    value="{{ Cart::getProductAmount($item) }}"
+                                    name="amount"
+                                    class="form-control product-amount"
+                                    id="product-amount-{{ $item->id }}"
+                                    data-product-id="{{ $item->id }}">
 
                                 <span class="input-group-btn">
-                                    <a class="btn btn-default" href="{{ action('CartController@addProduct', ['product' => $item->id]) }}">
+                                    <a
+                                        class="btn btn-default add-product"
+                                        href="{{ action('CartController@addProduct', ['product' => $item->id]) }}"
+                                        data-product-id="{{ $item->id }}">
                                         <span class="glyphicon glyphicon-plus"></span>
                                     </a>
                                 </span>

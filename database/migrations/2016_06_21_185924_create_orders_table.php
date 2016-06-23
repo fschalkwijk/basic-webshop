@@ -15,9 +15,14 @@ class CreateOrdersTable extends Migration
         DB::transaction(function(){
             Schema::create('orders', function (Blueprint $table) {
                 $table->increments('id');
-                $table->text('user_id')->references('id')->on('users')->onDelete('RESTRICT');
                 $table->text('transaction_id')->nullable();
-                $table->text('verified_at')->nullable();
+                $table->text('user_id')->nullable()->references('id')->on('users')->onDelete('RESTRICT');
+                $table->text('email');
+                $table->text('name');
+                $table->text('address');
+                $table->text('city');
+                $table->text('zipcode');
+                $table->timestamp('verified_at')->nullable();
 
                 $table->timestamp('created_at')->default(DB::raw('NOW()'));
                 $table->timestamp('updated_at')->default(DB::raw('NOW()'));

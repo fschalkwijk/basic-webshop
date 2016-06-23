@@ -92,8 +92,11 @@ return [
     */
 
     'custom' => [
-        'attribute-name' => [
-            'rule-name' => 'custom-message',
+        'password' => [
+            'regex' => 'Password must consist of at least five characters including at least one uppercase, one lowercase and one digit. Words like password and wachtwoord are forbidden',
+        ],
+        'zipcode' => [
+            'regex' => 'Zipcode must be four digits followed by an optional space followed by two letters',
         ],
     ],
 

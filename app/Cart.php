@@ -102,7 +102,7 @@ class Cart{
         return $this->totals['total_vat'];
     }
 
-    public function getTotalProductCount(){
+    public function getTotalProductAmount(){
         if(!isset($this->totals['total_products'])){
             $this->totals['total_products'] = $this->items->sum(function($item){
                 return $item->amount;
@@ -110,6 +110,14 @@ class Cart{
         }
 
         return $this->totals['total_products'];
+    }
+
+    protected function calculateTotals(){
+        $this->getTotalPrice();
+        $this->getTotalVat();
+        $this->getTotalProductAmount();
+
+        return $this;
     }
 
     protected function clearTotals(){
@@ -120,6 +128,19 @@ class Cart{
 
     public function getItems(){
         return collect($this->items);
+    }
+
+    public function toArray(){
+        $items = [];
+        foreach($this->items as $cart_item)
+            $items[$cart_item->product->id] = [
+                'amount' => $cart_item->amount,
+                'product' => $cart_item->product->toArray(),
+            ];
+
+        $this->calculateTotals();
+
+        return $this->totals + compact('items');
     }
 
     public function serialize(){
@@ -151,10 +172,8 @@ class Cart{
         }
     }
 
-    public function save(User $user){
-        $order = Order::create([
-            'user_id' => $user->id,
-        ]);
+    public function save(array $order_data){
+        $order = Order::create($order_data);
 
         $this->removeProductsWithZeroAmount();
 
@@ -165,11 +184,19 @@ class Cart{
                                     'price_each'    => $cart_item->product->price,
                                     'vat_percentage'=> $cart_item->product->vat_percentage
                                 ];
-                            });
+                            })->toArray();
 
         $order->products()->sync($order_lines);
 
+        $this->clear();
+
         return $order;
+    }
+
+    public function removeProductsWithZeroAmount(){
+        $this->items = $this->items->reject(function($item){
+            return $item->amount == 0;
+        });
     }
 
     public function print_r(){

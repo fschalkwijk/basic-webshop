@@ -8,8 +8,17 @@ class Order extends Model
 {
     protected $table = 'orders';
 
+    protected $fillable = [
+        'user_id',
+        'email',
+        'name',
+        'address',
+        'city',
+        'zipcode',
+    ];
+
     public function products(){
-        return $this->hasMany(Product::class)
+        return $this->belongsToMany(Product::class)
                     ->withPivot('amount', 'price_each')
                     ->withTimestamps()
                     ->withTrashed();

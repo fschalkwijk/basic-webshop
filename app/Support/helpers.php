@@ -1,0 +1,87 @@
+<?php
+
+function attr($item, $attr, $default=null){
+    if(is_object($item)){
+        if(isset($item->$attr))
+            return $item->$attr;
+
+        $parts = explode('.', $attr, 2);
+        if(count($parts) > 1 && isset($item->{$parts[0]}))
+            return attr($item->{$parts[0]}, $parts[1]);
+    } else{
+        if(isset($item[$attr]))
+            return $item[$attr];
+
+        $parts = explode('.', $attr, 2);
+        if(count($parts) > 1 && isset($item[$parts[0]]))
+            return attr($item[$parts[0]], $parts[1]);
+    }
+
+    return $default;
+}
+
+function get_subdomain(){
+    static $subdomain;
+    if(!is_null($subdomain))
+        return $subdomain;
+
+    if(preg_match('/(?<subdomain>admin|hotel)\.'.config('app.domain').'/', $_SERVER['HTTP_HOST'], $matches))
+        return $subdomain = $matches['subdomain'];
+    throw new Exception("Could not determine subdomain");
+}
+
+function array_subset($data, array $keys){
+	if(!is_array($data) && !is_object($data))
+		throw new Exception("array_subset parameter #1 must be of type array or object");
+
+	$result = [];
+	if(is_array($data)){
+		foreach($keys as $key)
+			if(isset($data[$key]))
+				$result[$key] = $data[$key];
+	} else {
+		foreach($keys as $key)
+			if(isset($data->$key))
+				$result[$key] = $data->$key;
+	}
+	return $result;
+}
+
+/**
+ * Removes an item from the array and returns its value.
+ *
+ * @param array $arr The input array
+ * @param $key The key pointing to the desired value
+ * @return The value mapped to $key or null if none
+ */
+function array_remove(array &$arr, $key) {
+    if (array_key_exists($key, $arr)) {
+        $val = $arr[$key];
+        unset($arr[$key]);
+
+        return $val;
+    }
+
+    return null;
+}
+
+function echo_array($array){
+	echo '<pre>';
+	print_r($array);
+	echo '</pre>';
+}
+
+function db_escape($value){
+    if(is_array($value))
+        return array_map(function($item){ return db_escape($item); }, $value);
+    else
+        return DB::connection()->getPdo()->quote($value);
+}
+
+function get_random_admin(){
+    return App\Models\Admin::orderByRaw('random()')->firstOrFail();
+}
+
+function get_random_hotel(){
+    return App\Models\Hotel::orderByRaw('random()')->firstOrFail();
+}

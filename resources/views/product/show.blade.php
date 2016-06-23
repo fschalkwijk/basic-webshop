@@ -40,7 +40,7 @@
 
                 <div class="panel-footer">
                     <div class="row">
-                        <div class="col-md-3 col-md-offset-7 col-sm-4 col-sm-offset-6 col-xs-6 col-xs-offset-3">
+                        <div class="col-md-3 col-md-offset-9 col-sm-4 col-sm-offset-8 col-xs-6 col-xs-offset-6">
                             <div class="input-group">
                                 <span class="input-group-btn">
                                     <a class="btn btn-default" href="{{ action('CartController@removeProduct', ['product' => $item->id, 'amount' => 1]) }}">
@@ -56,13 +56,6 @@
                                     </a>
                                 </span>
                             </div>
-                        </div>
-
-                        <div class="col-sm-2 col-xs-3">
-                            <a href="" class="btn btn-primary pull-right">
-                                <span class="glyphicon glyphicon-shopping-cart"></span>
-                                In winkelwagen
-                            </a>
                         </div>
                     </div>
                 </div>

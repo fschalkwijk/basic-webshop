@@ -19,3 +19,5 @@ Route::get('/product/{product}', 'ProductController@show');
 
 Route::get('/cart/add/{product}/{amount?}', 'CartController@addProduct');
 Route::get('/cart/remove/{product}/{amount?}', 'CartController@removeProduct');
+Route::get('/cart', 'CartController@show');
+Route::post('/cart', 'CartController@checkout');

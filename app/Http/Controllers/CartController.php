@@ -11,6 +11,19 @@ use App\Product;
 
 class CartController extends Controller
 {
+    public function show(Request $request){
+        $user = null;
+
+        if(\Auth::check())
+            $user = Auth::user();
+
+        return view('cart.show', compact('user'));
+    }
+
+    public function checkout(Request $request){
+
+    }
+
     public function addProduct(Request $request, Product $product, $amount=1){
         Cart::addProduct($product, $amount);
 

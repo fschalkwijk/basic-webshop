@@ -104,7 +104,9 @@ class Cart{
 
     public function getTotalProductCount(){
         if(!isset($this->totals['total_products'])){
-            $this->totals['total_products'] = $this->items->sum('amount');
+            $this->totals['total_products'] = $this->items->sum(function($item){
+                return $item->amount;
+            });
         }
 
         return $this->totals['total_products'];
@@ -114,6 +116,10 @@ class Cart{
         $this->totals = [];
 
         return $this;
+    }
+
+    public function getItems(){
+        return collect($this->items);
     }
 
     public function serialize(){

@@ -4,6 +4,8 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
+use App\Scopes\OwnerScope;
+
 class Order extends Model
 {
     protected $table = 'orders';
@@ -16,6 +18,12 @@ class Order extends Model
         'city',
         'zipcode',
     ];
+
+    public static function boot(){
+        parent::boot();
+
+        static::addGlobalScope(new OwnerScope);
+    }
 
     public function products(){
         return $this->belongsToMany(Product::class)

@@ -49,9 +49,10 @@ class CartController extends Controller
                     ->save();
 
             $order->user()->associate(Auth::user());
+            $order->save();
         }
 
-        return redirect()->action('HomeController@index'); //Change this to OrderController@show after I made this
+        return redirect()->action('OrderController@show', $order->id);
     }
 
     public function addProduct(Request $request, Product $product, $amount=1){

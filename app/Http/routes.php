@@ -15,7 +15,8 @@ Route::auth();
 
 Route::get('/', 'HomeController@index');
 
-Route::get('/product/{product}', 'ProductController@show');
+Route::resource('product', 'ProductController', ['only' => ['show']]);
+Route::resource('order', 'OrderController', ['only' => ['index', 'show']]);
 
 Route::get('/cart/add/{product}/{amount?}', 'CartController@addProduct');
 Route::get('/cart/remove/{product}/{amount?}', 'CartController@removeProduct');

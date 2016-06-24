@@ -27,4 +27,20 @@ class Order extends Model
     public function user(){
         return $this->belongsTo(User::class);
     }
+
+    public function getTotalPriceAttribute(){
+        return $this->products->sum(function($product){
+            return $product->pivot->amount * $product->pivot->price_each;
+        });
+    }
+
+    public function getProductAmountAttribute(){
+        return $this->products->sum('pivot.amount');
+    }
+
+    public function getTotalVatAttribute(){
+        return $this->products->sum(function($product){
+            return $product->pivot->amount * $product->pivot->vat_percentage;
+        });
+    }
 }

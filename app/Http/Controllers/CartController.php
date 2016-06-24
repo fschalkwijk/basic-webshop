@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 
+use Auth;
 use Cart;
 use App\Product;
 
@@ -14,14 +15,18 @@ class CartController extends Controller
     public function show(Request $request){
         $user = null;
 
-        if(\Auth::check())
+        if(Auth::check())
             $user = Auth::user();
 
         return view('cart.show', compact('user'));
     }
 
     public function checkout(Request $request){
+        if(Auth::check())
+            $request->merge(['email' => Auth::user()->email]);
+
         $rules = [
+            'email' => 'required|email',
             'name' => 'required',
             'address' => 'required',
             'zipcode' => ['required', 'regex:'.config('regex.zipcode')],
@@ -29,8 +34,8 @@ class CartController extends Controller
             'bank'  => 'required|integer|in:1001,1005,1009',
         ];
 
-        if(!\Auth::check()){
-            $rules['email'] = 'required|email|unique:users,email';
+        if(!Auth::check()){
+            $rules['email'] .= '|unique:users,email';
             $rules['password'] = ['confirmed', 'regex:'.config('regex.password')];
         }
 
@@ -38,12 +43,12 @@ class CartController extends Controller
 
         $order = Cart::save($request->all());
 
-        if(\Auth::check()){
-            $user = Auth::user()
-                    ->fill($request->data->except('password', 'email'))
+        if(Auth::check()){
+            Auth::user()
+                    ->fill($request->except('password', 'email'))
                     ->save();
 
-            $order->user_id = $user->id;
+            $order->user()->associate(Auth::user());
         }
 
         return redirect()->action('HomeController@index'); //Change this to OrderController@show after I made this

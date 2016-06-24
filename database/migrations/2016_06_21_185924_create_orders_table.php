@@ -16,7 +16,7 @@ class CreateOrdersTable extends Migration
             Schema::create('orders', function (Blueprint $table) {
                 $table->increments('id');
                 $table->text('transaction_id')->nullable();
-                $table->text('user_id')->nullable()->references('id')->on('users')->onDelete('RESTRICT');
+                $table->text('user_id')->unsigned()->nullable()->references('id')->on('users')->onDelete('RESTRICT');
                 $table->text('email');
                 $table->text('name');
                 $table->text('address');

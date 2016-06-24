@@ -19,7 +19,7 @@ class CreateProductsTable extends Migration
                 $table->text('description');
                 $table->text('image');
                 $table->decimal('price', 7, 2);
-                $table->text('vat_percentage', 3, 2);
+                $table->decimal('vat_percentage', 3, 2);
 
                 $table->timestamp('created_at')->default(DB::raw('NOW()'));
                 $table->timestamp('updated_at')->default(DB::raw('NOW()'));

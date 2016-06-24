@@ -6,35 +6,35 @@
         <div class="col-sm-10 col-sm-offset-1">
             <div class="panel panel-primary">
                 <div class="panel-heading">
-                    Your shoppingcart
+                    Jouw winkelmandje
                 </div>
 
                 <table class="table table-striped cart-table">
                     <thead>
                         <tr>
-                            <th>Articlenumber</th>
-                            <th>Name</th>
-                            <th>Price e/a</th>
-                            <th>Amount</th>
-                            <th>Price</th>
+                            <th>Artikelnummer</th>
+                            <th>Naam</th>
+                            <th>Prijs p/s</th>
+                            <th>Aantal</th>
+                            <th>Prijs</th>
                         </tr>
                     </thead>
 
                     <tfoot>
                         <tr>
                             <th colspan="2"></th>
-                            <th>Subtotal:</th>
+                            <th>Subtotaal:</th>
                             <th class="total-product-amount">{{ Cart::getTotalProductAmount() }}</th>
                             <th class="total-price">&euro; {{ number_format(Cart::getTotalPrice(), 2, ',', '.') }}</th>
                         </tr>
                         <tr>
                             <th colspan="3"></th>
-                            <th>Vat:</th>
+                            <th>BTW:</th>
                             <th class="total-vat">&euro; {{ number_format(Cart::getTotalVat(), 2, ',', '.') }}</th>
                         </tr>
                         <tr>
                             <th colspan="3"></th>
-                            <th>Total:</th>
+                            <th>Totaal:</th>
                             <th class="total-price">&euro; {{ number_format(Cart::getTotalPrice(), 2, ',', '.') }}</th>
                         </tr>
                     </tfoot>
@@ -82,9 +82,10 @@
                 </table>
             </div>
 
+            @if(Cart::getTotalProductAmount() > 0)
             <div class="panel panel-primary">
                 <div class="panel-heading">
-                    Checkout
+                    Verzenden en betalen
                 </div>
 
                 <div class="panel-body">
@@ -94,27 +95,27 @@
                         <div class="col-sm-6">
                             @include('layouts.input', [
                                 'name' => 'name',
-                                'title' => 'Name',
+                                'title' => 'Naam',
                                 'item' => $user])
 
                             @if(!Auth::check())
                             @include('layouts.input', [
                                 'name' => 'email',
-                                'title' => 'Emailaddress',
+                                'title' => 'Emailadres',
                                 'item' => $user,
                                 'type' => 'email'])
                             @endif
 
                             @include('layouts.input', [
                                 'name' => 'address',
-                                'title' => 'Address',
+                                'title' => 'Adres',
                                 'item' => $user])
 
                             <div class="row">
                                 <div class="col-sm-4">
                                     @include('layouts.input', [
                                         'name' => 'zipcode',
-                                        'title' => 'Zipcode',
+                                        'title' => 'Postcode',
                                         'item' => $user,
                                         'attrs'     => [
                                             'title'     => trans('validation.custom.zipcode.regex'),
@@ -126,7 +127,7 @@
                                 <div class="col-sm-8">
                                     @include('layouts.input', [
                                         'name' => 'city',
-                                        'title' => 'City',
+                                        'title' => 'Plaats',
                                         'item' => $user])
                                 </div>
                             </div>
@@ -161,11 +162,12 @@
                         </div>
 
                         <div class="col-sm-12 clearfix">
-                            <button type="submit" class="btn btn-primary pull-right">Order</button>
+                            <button type="submit" class="btn btn-primary pull-right">Bestel</button>
                         </div>
                     </form>
                 </div>
             </div>
+            @endif
         </div>
     </div>
 </div>

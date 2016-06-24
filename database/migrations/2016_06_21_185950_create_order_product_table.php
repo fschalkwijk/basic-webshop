@@ -14,8 +14,8 @@ class CreateOrderProductTable extends Migration
     {
         DB::transaction(function(){
             Schema::create('order_product', function (Blueprint $table) {
-                $table->text('order_id')->references('id')->on('orders')->onDelete('CASCADE');
-                $table->text('product_id')->references('id')->on('products')->onDelete('RESTRICT');
+                $table->integer('order_id')->unsigned()->references('id')->on('orders')->onDelete('CASCADE');
+                $table->integer('product_id')->unsigned()->references('id')->on('products')->onDelete('RESTRICT');
                 $table->integer('amount');
                 $table->decimal('price_each', 7, 2);
                 $table->decimal('vat_percentage', 3, 2);

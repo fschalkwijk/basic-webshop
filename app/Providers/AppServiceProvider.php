@@ -13,7 +13,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        app('Illuminate\Contracts\Routing\UrlGenerator')->forceSchema('https');
+
+        setlocale(LC_TIME, 'nl_NL.UTF-8');
+        \Carbon\Carbon::setLocale('nl');
     }
 
     /**
